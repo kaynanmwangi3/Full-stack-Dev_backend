@@ -15,7 +15,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JSON_SORT_KEYS"] = False
 
 # Allow dev origins -- during dev you can use CORS(app) or specify ports
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5000", "http://localhost:5173"]}},supports_credentials=True )
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5000", "http://localhost:5173", "https://full-stack-dev-backend.onrender.com"]}},supports_credentials=True )
 db.init_app(app)
 
 migrate = Migrate(app, db)
