@@ -16,35 +16,17 @@ app.config["JSON_SORT_KEYS"] = False
 
 # Allow dev origins -- during dev you can use CORS(app) or specify ports
 # CORS(app, resources={r"/api/*": {"origins": "https://full-stack-dev-rho.vercel.app"}})
-frontend_url = os.environ.get('FRONTEND_URL', 'https://full-stack-dev-rho.vercel.app')
+# frontend_url = os.environ.get('FRONTEND_URL', 'https://full-stack-dev-rho.vercel.app')
 
-CORS(app, resources={r"/api/*": {
-    "origins": [
-        frontend_url,
-        "http://localhost:5173", 
-        "http://127.0.0.1:5173"
-    ],
-    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    "allow_headers": ["Content-Type", "Authorization"]
-}})
-
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = jsonify()
-        response.headers.add("Access-Control-Allow-Origin", frontend_url)
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        response.headers.add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
-        response.headers.add("Access-Control-Allow-Credentials", "true")
-        return response
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', frontend_url)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
+
 db.init_app(app)
 
 migrate = Migrate(app, db)
