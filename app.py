@@ -15,12 +15,23 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JSON_SORT_KEYS"] = False
 
 # Allow dev origins -- during dev you can use CORS(app) or specify ports
-CORS(app, resources={r"/api/*": {
-    "origins": "https://full-stack-dev-rho.vercel.app",
-    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    "allow_headers": ["Content-Type", "Authorization"],
-    "supports_credentials": True
-}})
+# CORS(app, resources={r"/api/*": {
+#     "origins": "https://full-stack-dev-rho.vercel.app",
+#     "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+#     "allow_headers": ["Content-Type", "Authorization"],
+#     "supports_credentials": True
+# }})
+# Simplified CORS setup for testing
+CORS(app, supports_credentials=True)
+
+# Custom middleware to ensure CORS headers
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://full-stack-dev-rho.vercel.app')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
 db.init_app(app)
 
 migrate = Migrate(app, db)
